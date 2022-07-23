@@ -138,54 +138,18 @@ fun main() {
 }
 
 fun processList(inputList: List<Any?>?): List<ItemData>? {
-    
+    if ( inputList == null ) return null
     val result = ArrayList<ItemData>()
-   
-    if ( inputList == null ) {
-        return null
-    }
-    
-    if ( inputList.isEmpty() ) {
-        return result
-    }
-	
     for ((index, value) in inputList.withIndex()) {
-        if(value != null){
-            result.add( ItemData(index, value , setType(value) , setInfo(value) ) )
+        value?.let{
+            when (value){
+                is Int -> result.add( ItemData( index, value , "entero" , if (value % 10 == 0) "M10" else if (value % 5 == 0) "M5" else if (value % 2 == 0) "M2" else null ) )
+                is String -> result.add( ItemData( index, value , "cadena" , "L${value.length}" ) )
+                true -> result.add( ItemData( index, value , "booleano" , "Verdadero" ) )
+                false -> result.add( ItemData( index, value , "booleano" , "Falso" ) )
+                else -> result.add( ItemData( index, value , null , null ) )
+            }
         }
     }
     return result
-}
-
-fun setType(value : Any?) : String? {
-    return when (value) {
-        is Int -> "entero"
-        is String -> "cadena"
-        is Boolean -> "booleano"
-        else -> return null
-    }
-}
-
-fun intInfo(value : Int) : String? {
-   	val result = if (value % 10 == 0){
-        "M10"
-    } else if (value % 5 == 0){
-        "M5"
-    } else if (value % 2 == 0){
-        "M2"
-    } else {
-        null
-    }
-    return result
-}
-
-fun setInfo(value : Any?) : String? {
-    return when (value) {
-        is Int -> intInfo(value)
-        is String -> "L"+value.length
-        true -> "Verdadero"
-        false -> "Falso"
-        else -> null
-    }
-
 }
